@@ -1,20 +1,35 @@
-setup = () => createCanvas(600, 400);
+var angleSlider;
+var lengthSlider;
+var angle = 0;
+var lengthMultiplier = 0.67;
 
-var circle = {
-  x: 0,
-  y: 100,
-  diameter: 50
+setup = () => {
+  createCanvas(600, 600);
+  textSize(15);
+  angleSlider = createSlider(0, TWO_PI, PI / 4, 0.01);
+  lengthSlider = createSlider(0.6, 0.75, 0.67, 0.001);
 };
 
-var col = 0;
+draw = () => {
+  background(51);
+  text("Change Angle", 10, 590);
+  text("Change Next Length", 430, 590);
+  angle = angleSlider.value();
+  lengthMultiplier = lengthSlider.value();
+  stroke(255);
+  translate(300, height);
+  branch(100);
+};
 
-function draw() {
-  redCol = map(mouseX, 0, 600, 0, 255);
-
-  blueCol = map(mouseY, 0, 400, 0, 255);
-
-  background(redCol, redCol + blueCol / 2, blueCol);
-  ellipse(circle.x, circle.y, circle.diameter);
-
-  circle.x = circle.x + 1;
+function branch(len) {
+  line(0, 0, 0, -len);
+  translate(0, -len);
+  if (len > 4) {
+    push();
+    rotate(angle);
+    branch(len * lengthMultiplier);
+    pop();
+    rotate(-angle);
+    branch(len * lengthMultiplier);
+  }
 }
