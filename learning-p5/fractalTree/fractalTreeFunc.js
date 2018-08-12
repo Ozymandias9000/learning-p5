@@ -13,7 +13,7 @@ setup = () => {
 draw = () => {
   background(51);
   text("Change Angle", 10, 590);
-  text("Change Next Length", 430, 590);
+  text("Change Length Multiplier", 430, 590);
   angle = angleSlider.value();
   lengthMultiplier = lengthSlider.value();
   stroke(255);
