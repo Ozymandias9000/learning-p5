@@ -10,7 +10,7 @@ function draw() {
 
   var target = createVector(mouseX, mouseY);
 
-  vehicle.seek(target);
+  vehicle.arrive(target);
 
   vehicle.display();
   vehicle.update();
@@ -29,9 +29,20 @@ function Vehicle(
   this.maxSpeed = maxSpeed;
   this.maxForce = maxForce;
 
-  this.seek = function(target) {
+  this.r = 6;
+
+  this.arrive = function(target) {
     var desired = p5.Vector.sub(target, this.pos);
-    desired.setMag(this.maxSpeed);
+    // desired.setMag(this.maxSpeed);
+
+    var d = desired.mag();
+
+    if (d < 100) {
+      var m = map(d, 0, 100, 0, this.maxSpeed);
+      desired.setMag(m);
+    } else {
+      desired.setMag(this.maxSpeed);
+    }
 
     var steering = p5.Vector.sub(desired, this.vel);
     steering.limit(this.maxForce);
@@ -47,9 +58,19 @@ function Vehicle(
   };
 
   this.display = function() {
-    fill(255, 150);
-    stroke(255);
-    ellipse(this.pos.x, this.pos.y, 48, 48);
+    var theta = this.vel.heading() + PI / 2;
+    fill(127);
+    stroke(200);
+    strokeWeight(1);
+    push();
+    translate(this.pos.x, this.pos.y);
+    rotate(theta);
+    beginShape();
+    vertex(0, -this.r * 2);
+    vertex(-this.r, this.r * 2);
+    vertex(this.r, this.r * 2);
+    endShape(CLOSE);
+    pop();
   };
 
   this.applyForce = function(force) {
